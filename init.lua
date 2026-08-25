@@ -14,8 +14,8 @@ Paths = {
 
   lazy = vim.fn.stdpath("data") .. "/lazy/lazy.nvim",
   spellfile = vim.fn.stdpath("config") .. "/spell/en.utf-8.add",
-  windows_shell = "C:\\Users\\eveti\\scoop\\apps\\git\\current\\bin\\bash.exe",
-  windows_query_driver = "C:/Users/eveti/scoop/apps/mingw/**/bin/gcc.exe",
+  windows_shell = "C:\\Program Files\\Git\\usr\\bin\\bash.exe",
+  windows_query_driver = "C:/Users/dommc/scoop/apps/mingw/**/bin/gcc.exe",
 }
 
 -- [[ Command Shortcuts ]]
