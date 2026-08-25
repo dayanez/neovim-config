@@ -45,6 +45,38 @@ map("n", "<leader>q", "<cmd>q<CR>")
 map("n", "<leader>s", "<cmd>set spell!<CR>")
 map("n", "<Esc>", "<cmd>nohlsearch<CR>")
 
+-- GUI-style editing keys (Ctrl+A/Z/C/V). unnamedplus (set above) already
+-- syncs y/p with the system clipboard, so copy/paste just alias yank/put.
+map("n", "<C-a>", "ggVG")
+map("v", "<BS>", "d")
+map("n", "<C-z>", "u")
+map("i", "<C-z>", "<C-o>u")
+map("n", "<C-c>", "yy")
+map("v", "<C-c>", "y")
+map("n", "<C-v>", "p")
+map("i", "<C-v>", "<C-r>+")
+map("v", "<C-v>", '"_dP')
+map("n", "<C-q>", "<C-v>") -- Ctrl+V above claims visual-block's usual key; use this instead
+
+-- Ctrl+J: toggle a terminal split open/closed with the same key.
+local term_win = nil
+local function toggle_term()
+  if term_win and vim.api.nvim_win_is_valid(term_win) then
+    vim.api.nvim_win_close(term_win, true)
+    term_win = nil
+    return
+  end
+  vim.cmd("botright split | terminal")
+  term_win = vim.api.nvim_get_current_win()
+  vim.cmd("startinsert")
+end
+map("n", "<C-j>", toggle_term)
+map("i", "<C-j>", function()
+  vim.cmd("stopinsert")
+  toggle_term()
+end)
+map("t", "<C-j>", toggle_term)
+
 -- [[ Big files: strip anything expensive so huge files stay responsive ]]
 local bigfile_bytes = 1024 * 1024 -- 1MB
 vim.api.nvim_create_autocmd("BufReadPre", {

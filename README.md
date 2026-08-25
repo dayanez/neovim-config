@@ -28,3 +28,14 @@ Leader is `<Space>`.
 - `<leader>q` -- quit
 - `<leader>s` -- toggle spellcheck
 - `<Esc>` -- clear search highlight
+
+GUI-style editing keys (clipboard already syncs with the system clipboard via
+`unnamedplus`, so these just alias yank/put):
+
+- `<C-a>` -- select the whole buffer; `<BS>` on that selection deletes it all
+- `<C-z>` -- undo (normal and insert mode)
+- `<C-c>` -- copy (current line in normal mode, selection in visual mode)
+- `<C-v>` -- paste (normal, insert, and visual mode)
+- `<C-q>` -- visual-block select (moved here since `<C-v>` above is now paste)
+- `<C-j>` -- toggle a terminal split open/closed (works from normal, insert,
+  and terminal mode)
