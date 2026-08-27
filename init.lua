@@ -56,7 +56,18 @@ map("v", "<C-c>", "y")
 map("n", "<C-v>", "p")
 map("i", "<C-v>", "<C-r>+")
 map("v", "<C-v>", '"_dP')
-map("n", "<C-q>", "<C-v>") -- Ctrl+V above claims visual-block's usual key; use this instead
+map("n", "<leader>v", "<C-v>") -- Ctrl+V above claims visual-block's usual key; Ctrl+Q below closes tabs, so use this instead
+
+-- Tabs: each open file lives in its own tab (see the netrw section below,
+-- which opens files via netrw_browse_split = 3, i.e. into a new tab).
+for i = 1, 9 do
+  map("n", "<C-" .. i .. ">", "<cmd>tabnext " .. i .. "<CR>")
+end
+map("n", "<C-q>", function()
+  if vim.fn.tabpagenr("$") > 1 then
+    vim.cmd("tabclose")
+  end
+end)
 
 -- Ctrl+J: toggle a terminal split open/closed with the same key.
 local term_win = nil
@@ -98,6 +109,41 @@ vim.api.nvim_create_autocmd("BufReadPre", {
       vim.cmd("syntax clear")
       pcall(vim.treesitter.stop, args.buf)
     end)
+  end,
+})
+
+-- [[ File explorer: netrw (built-in, no extra plugin) ]]
+vim.g.netrw_banner = 0
+vim.g.netrw_winsize = 25
+vim.g.netrw_browse_split = 3 -- opening a file from netrw puts it in a new tab
+
+map("n", "<C-b>", "<cmd>Lexplore<CR>")
+
+-- Directories open on a single <CR>, same as netrw's default. Files require
+-- <CR> twice: the first press just arms that file, the second opens it (via
+-- netrw's own <Plug>NetrwLocalBrowseCheck) so a stray keypress while browsing
+-- can't accidentally load a buffer you didn't mean to edit.
+local netrw_armed = nil
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "netrw",
+  callback = function(ev)
+    local open_keys = vim.api.nvim_replace_termcodes("<Plug>NetrwLocalBrowseCheck", true, false, true)
+    vim.keymap.set("n", "<CR>", function()
+      local word = vim.fn["netrw#Call"]("NetrwGetWord")
+      local path = (vim.b.netrw_curdir or "") .. "/" .. word
+      if vim.fn.isdirectory(path) == 1 or netrw_armed == path then
+        netrw_armed = nil
+        vim.api.nvim_feedkeys(open_keys, "m", false)
+      else
+        netrw_armed = path
+        vim.notify("Press <CR> again to open " .. word, vim.log.levels.INFO)
+      end
+    end, { buffer = ev.buf, silent = true, desc = "netrw: enter dir, or arm/open file (press twice)" })
+
+    vim.keymap.set("n", "<Esc>", function()
+      netrw_armed = nil
+      return "<Esc>"
+    end, { buffer = ev.buf, expr = true, silent = true })
   end,
 })
 
