@@ -1,5 +1,6 @@
--- Minimal, fast, monochrome config. Black/white text, red-only syntax
--- highlighting, animated cursor trail, and huge files open without lag.
+-- Minimal, fast config. Black background, white text, green syntax
+-- highlighting (blue comments), animated cursor trail, and huge files
+-- open without lag.
 
 vim.loader.enable()
 
@@ -195,4 +196,4 @@ require("lazy").setup({
   checker = { enabled = false },
 })
 
-vim.cmd.colorscheme("redwrite")
+vim.cmd.colorscheme("greenwrite")

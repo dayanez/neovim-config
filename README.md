@@ -1,13 +1,14 @@
 # nvim config
 
-Minimal, fast, monochrome. Black background, white text, and syntax
-highlighting in shades of red only. No LSP, no completion, no file tree,
-no bloat -- just an editor.
+Minimal, fast. Black background, white text, and syntax highlighting in
+shades of green (comments in blue). No LSP, no completion, no bloat --
+just an editor.
 
 ## What's in it
 
 - `init.lua` -- options, keymaps, big-file handling, plugin list
-- `colors/redwrite.lua` -- the colorscheme (black/white base, red syntax)
+- `colors/greenwrite.lua` -- the colorscheme (black/white base, green
+  syntax, blue comments)
 
 Three plugins total, managed by [lazy.nvim](https://github.com/folke/lazy.nvim):
 
