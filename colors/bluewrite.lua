@@ -1,8 +1,10 @@
 -- bluewrite: classic old-school terminal look -- navy blue background,
 -- white text, DOS/Turbo-Pascal-IDE-style syntax highlighting. Syntax
--- colors are chosen from the warm end of the wheel (yellow/orange/red)
--- since those contrast a blue background far more than blue-adjacent
--- hues like cyan do.
+-- colors are chosen from the warm end of the wheel (red/orange/yellow/
+-- magenta) since those contrast a blue background far more than
+-- blue-adjacent hues like cyan do. Keywords/statements get the highest-
+-- contrast color (true red) since they're the syntax that should pop
+-- hardest; constants/numbers use magenta to stay visually distinct.
 
 vim.cmd("hi clear")
 if vim.fn.exists("syntax_on") == 1 then
@@ -19,10 +21,11 @@ local blue_light = "#3a3aff" -- borders, split lines (deliberately low-contrast)
 local white = "#f0f0f0"
 local grey = "#cfcfcf" -- line numbers, delimiters -- neutral, not blue-tinted
 local orange = "#ff9900" -- comments
-local yellow = "#ffff33" -- keywords, statements, functions
+local yellow = "#ffff33" -- functions
 local yellow_dim = "#cc8800" -- preproc / macros, less prominent
 local green = "#33ff66" -- strings, operators, special chars
-local red = "#ff4433" -- numbers, booleans, constants
+local red = "#ff2222" -- keywords, statements -- the highest-contrast color against blue, reserved for the syntax that should pop hardest
+local magenta = "#ff44cc" -- numbers, booleans, constants
 local bright_white = "#ffffff" -- types, structures, tags
 
 local hl = vim.api.nvim_set_hl
@@ -49,24 +52,24 @@ hl(0, "Whitespace", { fg = blue_light })
 hl(0, "NonText", { fg = blue_light })
 hl(0, "EndOfBuffer", { fg = blue })
 
--- Syntax: warm palette (yellow/orange/red/white) on a blue field, plain
--- identifiers stay white so code doesn't turn into a wall of color.
+-- Syntax: warm palette (red/orange/yellow/magenta/white) on a blue field,
+-- plain identifiers stay white so code doesn't turn into a wall of color.
 hl(0, "Comment", { fg = orange, italic = true })
-hl(0, "Constant", { fg = red })
+hl(0, "Constant", { fg = magenta })
 hl(0, "String", { fg = green })
 hl(0, "Character", { fg = green })
-hl(0, "Number", { fg = red })
-hl(0, "Boolean", { fg = red })
-hl(0, "Float", { fg = red })
+hl(0, "Number", { fg = magenta })
+hl(0, "Boolean", { fg = magenta })
+hl(0, "Float", { fg = magenta })
 hl(0, "Identifier", { fg = white })
 hl(0, "Function", { fg = yellow, bold = true })
-hl(0, "Statement", { fg = yellow, bold = true })
-hl(0, "Conditional", { fg = yellow, bold = true })
-hl(0, "Repeat", { fg = yellow, bold = true })
-hl(0, "Label", { fg = yellow })
+hl(0, "Statement", { fg = red, bold = true })
+hl(0, "Conditional", { fg = red, bold = true })
+hl(0, "Repeat", { fg = red, bold = true })
+hl(0, "Label", { fg = red })
 hl(0, "Operator", { fg = green })
-hl(0, "Keyword", { fg = yellow, bold = true })
-hl(0, "Exception", { fg = yellow, bold = true })
+hl(0, "Keyword", { fg = red, bold = true })
+hl(0, "Exception", { fg = red, bold = true })
 hl(0, "PreProc", { fg = yellow_dim })
 hl(0, "Include", { fg = yellow_dim })
 hl(0, "Define", { fg = yellow_dim })
