@@ -1,6 +1,6 @@
--- Minimal, fast config. Black background, white text, green syntax
--- highlighting (blue comments), animated cursor trail, and huge files
--- open without lag.
+-- Minimal, fast config. Old-school terminal look: navy blue background,
+-- white text, DOS/Turbo-Pascal-style syntax highlighting, animated cursor
+-- trail, and huge files open without lag.
 
 vim.loader.enable()
 
@@ -183,8 +183,8 @@ require("lazy").setup({
   {
     "sphamba/smear-cursor.nvim",
     opts = {
-      cursor_color = "#ff3333",
-      normal_bg = "#0a0a0a",
+      cursor_color = "#ffff55",
+      normal_bg = "#0000aa",
       stiffness = 0.6,
       trailing_stiffness = 0.3,
       trailing_exponent = 4,
@@ -196,4 +196,4 @@ require("lazy").setup({
   checker = { enabled = false },
 })
 
-vim.cmd.colorscheme("greenwrite")
+vim.cmd.colorscheme("bluewrite")

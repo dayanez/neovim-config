@@ -1,14 +1,17 @@
 # nvim config
 
-Minimal, fast. Black background, white text, and syntax highlighting in
-shades of green (comments in blue). No LSP, no completion, no bloat --
-just an editor.
+Minimal, fast. Old-school terminal look: navy blue background, white text,
+and DOS/Turbo-Pascal-style syntax highlighting (yellow keywords, cyan
+comments, green strings, magenta numbers). No LSP, no completion, no
+bloat -- just an editor.
 
 ## What's in it
 
 - `init.lua` -- options, keymaps, big-file handling, plugin list
-- `colors/greenwrite.lua` -- the colorscheme (black/white base, green
-  syntax, blue comments)
+- `colors/bluewrite.lua` -- the active colorscheme (navy blue/white base,
+  DOS-IDE-style syntax colors)
+- `colors/greenwrite.lua`, `colors/redwrite.lua` -- other colorschemes kept
+  around; switch with `:colorscheme <name>`
 
 Three plugins total, managed by [lazy.nvim](https://github.com/folke/lazy.nvim):
 
