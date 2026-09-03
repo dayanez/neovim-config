@@ -1,9 +1,10 @@
 # nvim config
 
 Minimal, fast. Old-school terminal look: navy blue background, white text,
-and DOS/Turbo-Pascal-style syntax highlighting (yellow keywords, cyan
-comments, green strings, magenta numbers). No LSP, no completion, no
-bloat -- just an editor.
+and DOS/Turbo-Pascal-style syntax highlighting in warm colors chosen to
+contrast the blue (yellow keywords, orange comments, green strings, red
+numbers, bright white types). No LSP, no completion, no bloat -- just an
+editor.
 
 ## What's in it
 

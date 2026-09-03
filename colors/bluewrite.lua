@@ -1,6 +1,8 @@
 -- bluewrite: classic old-school terminal look -- navy blue background,
--- white text, DOS/Turbo-Pascal-IDE-style syntax highlighting (yellow
--- keywords, cyan comments, green strings, magenta numbers).
+-- white text, DOS/Turbo-Pascal-IDE-style syntax highlighting. Syntax
+-- colors are chosen from the warm end of the wheel (yellow/orange/red)
+-- since those contrast a blue background far more than blue-adjacent
+-- hues like cyan do.
 
 vim.cmd("hi clear")
 if vim.fn.exists("syntax_on") == 1 then
@@ -13,15 +15,15 @@ vim.g.colors_name = "bluewrite"
 
 local blue = "#0000aa" -- classic terminal blue background
 local blue_dark = "#000066" -- cursorline / dim panels
-local blue_light = "#3a3aff" -- borders, split lines
+local blue_light = "#3a3aff" -- borders, split lines (deliberately low-contrast)
 local white = "#f0f0f0"
-local grey = "#9a9acc" -- line numbers, delimiters (readable on blue)
-local cyan = "#55ffff" -- comments
-local yellow = "#ffff55" -- keywords, statements, functions
-local yellow_dim = "#aaaa00" -- preproc / macros, less prominent
-local green = "#55ff55" -- strings, operators, special chars
-local magenta = "#ff55ff" -- numbers, booleans, constants
-local cyan_light = "#aaffff" -- types, structures, tags
+local grey = "#cfcfcf" -- line numbers, delimiters -- neutral, not blue-tinted
+local orange = "#ff9900" -- comments
+local yellow = "#ffff33" -- keywords, statements, functions
+local yellow_dim = "#cc8800" -- preproc / macros, less prominent
+local green = "#33ff66" -- strings, operators, special chars
+local red = "#ff4433" -- numbers, booleans, constants
+local bright_white = "#ffffff" -- types, structures, tags
 
 local hl = vim.api.nvim_set_hl
 
@@ -47,15 +49,15 @@ hl(0, "Whitespace", { fg = blue_light })
 hl(0, "NonText", { fg = blue_light })
 hl(0, "EndOfBuffer", { fg = blue })
 
--- Syntax: classic DOS-IDE palette on a blue field, plain identifiers stay
--- white so code doesn't turn into a wall of color.
-hl(0, "Comment", { fg = cyan, italic = true })
-hl(0, "Constant", { fg = magenta })
+-- Syntax: warm palette (yellow/orange/red/white) on a blue field, plain
+-- identifiers stay white so code doesn't turn into a wall of color.
+hl(0, "Comment", { fg = orange, italic = true })
+hl(0, "Constant", { fg = red })
 hl(0, "String", { fg = green })
 hl(0, "Character", { fg = green })
-hl(0, "Number", { fg = magenta })
-hl(0, "Boolean", { fg = magenta })
-hl(0, "Float", { fg = magenta })
+hl(0, "Number", { fg = red })
+hl(0, "Boolean", { fg = red })
+hl(0, "Float", { fg = red })
 hl(0, "Identifier", { fg = white })
 hl(0, "Function", { fg = yellow, bold = true })
 hl(0, "Statement", { fg = yellow, bold = true })
@@ -70,19 +72,19 @@ hl(0, "Include", { fg = yellow_dim })
 hl(0, "Define", { fg = yellow_dim })
 hl(0, "Macro", { fg = yellow_dim })
 hl(0, "PreCondit", { fg = yellow_dim })
-hl(0, "Type", { fg = cyan_light })
-hl(0, "StorageClass", { fg = cyan_light })
-hl(0, "Structure", { fg = cyan_light })
-hl(0, "Typedef", { fg = cyan_light })
+hl(0, "Type", { fg = bright_white, bold = true })
+hl(0, "StorageClass", { fg = bright_white, bold = true })
+hl(0, "Structure", { fg = bright_white, bold = true })
+hl(0, "Typedef", { fg = bright_white, bold = true })
 hl(0, "Special", { fg = green })
 hl(0, "SpecialChar", { fg = green })
-hl(0, "Tag", { fg = cyan_light })
+hl(0, "Tag", { fg = bright_white, bold = true })
 hl(0, "Delimiter", { fg = grey })
-hl(0, "SpecialComment", { fg = cyan })
+hl(0, "SpecialComment", { fg = orange })
 hl(0, "Debug", { fg = yellow })
 hl(0, "Underlined", { fg = yellow, underline = true })
 hl(0, "Ignore", { fg = grey })
-hl(0, "Error", { fg = white, bg = magenta, bold = true })
+hl(0, "Error", { fg = white, bg = red, bold = true })
 hl(0, "Todo", { fg = blue, bg = yellow, bold = true })
 
 -- Treesitter groups link back to the base groups above.
