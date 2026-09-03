@@ -1,6 +1,9 @@
--- Minimal, fast config. Old-school terminal look: navy blue background,
--- white text, DOS/Turbo-Pascal-style syntax highlighting, animated cursor
--- trail, and huge files open without lag.
+-- Fast config with an old-school terminal look. Default colorscheme is
+-- ambertype: a single-hue amber-phosphor theme chosen for eye strain over
+-- looks (see colors/ambertype.lua for why); bluewrite/greenwrite/redwrite
+-- are kept around for when punchy contrast is wanted instead. Also: LSP +
+-- completion + formatting tuned for C#, a jumpy animated cursor trail, and
+-- huge files still open without lag.
 
 vim.loader.enable()
 
@@ -58,6 +61,28 @@ map("n", "<C-v>", "p")
 map("i", "<C-v>", "<C-r>+")
 map("v", "<C-v>", '"_dP')
 map("n", "<leader>v", "<C-v>") -- Ctrl+V above claims visual-block's usual key; Ctrl+Q below closes tabs, so use this instead
+
+-- Telescope: fuzzy finding.
+map("n", "<leader>ff", "<cmd>Telescope find_files<CR>")
+map("n", "<leader>fg", "<cmd>Telescope live_grep<CR>")
+map("n", "<leader>fb", "<cmd>Telescope buffers<CR>")
+map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>")
+
+-- LSP: buffer-local keymaps set up once a server attaches (works for
+-- omnisharp/C# and anything else added later).
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(ev)
+    local o = { buffer = ev.buf }
+    map("n", "gd", vim.lsp.buf.definition, o)
+    map("n", "gr", vim.lsp.buf.references, o)
+    map("n", "gi", vim.lsp.buf.implementation, o)
+    map("n", "K", vim.lsp.buf.hover, o)
+    map("n", "<leader>rn", vim.lsp.buf.rename, o)
+    map("n", "<leader>ca", vim.lsp.buf.code_action, o)
+    map("n", "[d", vim.diagnostic.goto_prev, o)
+    map("n", "]d", vim.diagnostic.goto_next, o)
+  end,
+})
 
 -- Tabs: each open file lives in its own tab (see the netrw section below,
 -- which opens files via netrw_browse_split = 3, i.e. into a new tab).
@@ -169,6 +194,7 @@ require("lazy").setup({
       require("nvim-treesitter").install({
         "c", "cpp", "lua", "python", "javascript", "typescript",
         "rust", "go", "bash", "markdown", "markdown_inline", "json",
+        "c_sharp", "xml",
       })
       vim.api.nvim_create_autocmd("FileType", {
         callback = function(ev)
@@ -183,17 +209,82 @@ require("lazy").setup({
   {
     "sphamba/smear-cursor.nvim",
     opts = {
-      cursor_color = "#ffff55",
-      normal_bg = "#0000aa",
-      stiffness = 0.6,
-      trailing_stiffness = 0.3,
-      trailing_exponent = 4,
+      -- "Jumpy" trail: snappy head (high stiffness) with a springy overshoot
+      -- (low damping) instead of a smooth glide.
+      stiffness = 0.8,
+      trailing_stiffness = 0.25,
+      trailing_exponent = 2,
+      damping = 0.5,
+      distance_stop_animating = 0.3,
       gamma = 1,
+      cursor_color = "#ffb000",
+      normal_bg = "#161210",
     },
+    config = function(_, opts)
+      require("smear_cursor").setup(opts)
+      -- cursor_color/normal_bg must match the active colorscheme's actual
+      -- background or the trail redraws against the wrong color.
+      local per_colorscheme = {
+        ambertype = { cursor_color = "#ffb000", normal_bg = "#161210" },
+        bluewrite = { cursor_color = "#ff2222", normal_bg = "#0000aa" },
+        greenwrite = { cursor_color = "#33ff77", normal_bg = "#0a0a0a" },
+        redwrite = { cursor_color = "#ff3b3b", normal_bg = "#0a0a0a" },
+      }
+      vim.api.nvim_create_autocmd("ColorScheme", {
+        callback = function()
+          local c = per_colorscheme[vim.g.colors_name]
+          if c then
+            require("smear_cursor").setup(c)
+          end
+        end,
+      })
+    end,
+  },
+
+  -- [[ C# / general LSP support ]]
+  { "mason-org/mason.nvim", opts = {} },
+  {
+    "mason-org/mason-lspconfig.nvim",
+    dependencies = { "neovim/nvim-lspconfig", "mason-org/mason.nvim" },
+    opts = {
+      ensure_installed = { "omnisharp" },
+      automatic_enable = true,
+    },
+    config = function(_, opts)
+      vim.lsp.config("*", { capabilities = require("blink.cmp").get_lsp_capabilities() })
+      vim.lsp.config("omnisharp", {
+        settings = {
+          FormattingOptions = { EnableEditorConfigSupport = true, OrganizeImports = true },
+          RoslynExtensionsOptions = { EnableImportCompletion = true, EnableAnalyzersSupport = true },
+        },
+      })
+      require("mason-lspconfig").setup(opts)
+    end,
+  },
+  {
+    "saghen/blink.cmp",
+    version = "1.*",
+    opts = {
+      keymap = { preset = "default" },
+      sources = { default = { "lsp", "path", "snippets", "buffer" } },
+    },
+  },
+  { "windwp/nvim-autopairs", opts = {} },
+  { "lewis6991/gitsigns.nvim", opts = {} },
+  {
+    "stevearc/conform.nvim",
+    opts = {
+      formatters_by_ft = { cs = { "csharpier" } },
+      format_on_save = { timeout_ms = 2000, lsp_format = "fallback" },
+    },
+  },
+  {
+    "nvim-telescope/telescope.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
   },
 }, {
   ui = { border = "none" },
   checker = { enabled = false },
 })
 
-vim.cmd.colorscheme("bluewrite")
+vim.cmd.colorscheme("ambertype")
